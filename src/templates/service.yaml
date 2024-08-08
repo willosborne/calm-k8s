@@ -8,5 +8,5 @@ spec:
     type: LoadBalancer
     ports:
     - protocol: TCP
-      port: {{ port }
+      port: {{ port }}
       targetPort: {{ targetPort }}

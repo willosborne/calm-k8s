@@ -2,7 +2,7 @@ import Handlebars from "handlebars";
 import { promises as fs } from 'node:fs';
 
 async function serviceTemplate() {
-    const templateFile = await fs.readFile("templates/service.template.yaml", { encoding: 'utf-8' });
+    const templateFile = await fs.readFile("src/templates/service.yaml", { encoding: 'utf-8' });
     console.log(templateFile)
     return Handlebars.compile(templateFile);
 }
@@ -13,8 +13,8 @@ export default async function(filename: string) {
     const out = template({
         'port': 1234,
         'targetPort': 12345,
-        'name': "egg",
-        'label': 'label'
+        'serviceName': "egg",
+        'appName': 'label'
     })
     console.log(out)
     return out;
