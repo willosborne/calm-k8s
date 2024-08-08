@@ -1,0 +1,29 @@
+{
+  "name": "calm-k8s",
+  "version": "0.0.1",
+  "description": "CLI tool to bootstrap a CALM architecture instance as a set of K8s CRDs ",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run link",
+    "test": "test",
+    "link": "npx link .",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "calm",
+    "architecture"
+  ],
+  "author": "Will Osborne",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "bin": {
+    "calm-k8s": "./dist/index.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "link": "^2.1.1",
+    "typescript": "^5.5.4"
+  }
+}
