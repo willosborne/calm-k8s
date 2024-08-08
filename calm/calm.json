@@ -1,3 +1,17 @@
 {
-    "calm": "goes here"
+    "nodes": [
+        {
+            "unique-id": "attendees-service",
+            "interfaces": [
+                {
+                    "unique-id": "attendees-service-hostport",
+                    "host": "abcd.com",
+                    "port": 12345
+                }
+            ]
+        }
+    ],
+    "relationships": [
+
+    ]
 }
