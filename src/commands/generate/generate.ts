@@ -28,7 +28,7 @@ async function loadCalm(filename: string, debug: boolean) {
 }
 
 function zipYamlDocs(docs: string[]): string {
-    return docs.join("\n---\n");
+    return "---\n" + docs.join("\n---\n");
 }
 
 export default async function(filename: string, debug: boolean) {
