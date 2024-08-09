@@ -15,7 +15,7 @@
       "interfaces": [
         {
           "unique-id": "application-image",
-          "image": "group/project:version"
+          "image": "masteringapi/attendees:v1.1"
         },
         {
           "unique-id": "http-port",
@@ -70,11 +70,7 @@
       "relationship-type": {
         "deployed-in": {
           "container": "service-mesh-k8s-cluster",
-          "nodes": [
-            "load-balancer",
-            "application",
-            "postgres-database"
-          ]
+          "nodes": ["load-balancer", "application", "postgres-database"]
         }
       }
     }
