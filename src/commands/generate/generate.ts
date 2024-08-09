@@ -7,6 +7,10 @@ async function loadTemplate(filename: string) {
     return Handlebars.compile(templateFile);
 }
 
+async function getNamespaceTemplate() {
+    return await loadTemplate("src/templates/namespace.yaml");
+}
+
 async function getServiceTemplate() {
     return await loadTemplate("src/templates/service.yaml");
 }
@@ -30,6 +34,7 @@ function zipYamlDocs(docs: string[]): string {
 export default async function(filename: string, debug: boolean) {
     if (debug)
         console.log("generating from " + filename);
+    const namespaceTemplate = await getNamespaceTemplate();
     const serviceTemplate = await getServiceTemplate();
     const deploymentTemplate = await getDeploymentTemplate();
 
@@ -42,10 +47,11 @@ export default async function(filename: string, debug: boolean) {
 
     const parameters = buildParameters(calmProperties);
 
-    const service = serviceTemplate(parameters)
+    const namespace = namespaceTemplate(parameters);
+    const service = serviceTemplate(parameters);
     const deployment = deploymentTemplate(parameters);
 
-    const outputValues = [service, deployment];
+    const outputValues = [namespace, service, deployment];
     const output = zipYamlDocs(outputValues);
 
     return output;
