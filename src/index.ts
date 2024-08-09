@@ -10,7 +10,8 @@ program.command('generate')
     .argument('<document>', 'CALM document file path to generate from')
     .option('-v, --verbose', 'Whether to do verbose level logging', false)
     .action(async (arg, options) => {
-        await generate(arg, options.verbose); 
+        const output = await generate(arg, options.verbose); 
+        console.log(output);
     });
 
 program.parse();

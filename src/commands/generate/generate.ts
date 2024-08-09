@@ -48,6 +48,5 @@ export default async function(filename: string, debug: boolean) {
     const outputValues = [service, deployment];
     const output = zipYamlDocs(outputValues);
 
-    console.log(output);
     return output;
 }
