@@ -63,24 +63,23 @@ deployment.apps/application created
 You can verify the resources created with:
 
 ```sh
-kubectl get all
+kubectl get all --namespace application
 ```
 
-Exanmple output:
+Example output:
 
 ```sh
-NAME                               READY   STATUS             RESTARTS   AGE
-pod/application-66765b6b8c-nqnpj   0/1     ImagePullBackOff   0          30s
-pod/application-66765b6b8c-pp8d8   0/1     ImagePullBackOff   0          30s
-pod/application-66765b6b8c-s8pv8   0/1     ErrImagePull       0          30s
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/application-7bc585b64-b9nvj   1/1     Running   0          16s
+pod/application-7bc585b64-dsz87   1/1     Running   0          16s
+pod/application-7bc585b64-ltl47   1/1     Running   0          16s
 
-NAME                      TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-service/application-svc   LoadBalancer   10.99.36.253   <pending>     8080:32257/TCP   30s
-service/kubernetes        ClusterIP      10.96.0.1      <none>        443/TCP          6m59s
+NAME                      TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/application-svc   LoadBalancer   10.105.153.121   <pending>     8080:31005/TCP   17s
 
 NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/application   0/3     3            0           30s
+deployment.apps/application   3/3     3            3           16s
 
-NAME                                     DESIRED   CURRENT   READY   AGE
-replicaset.apps/application-66765b6b8c   3         3         0       30s
+NAME                                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/application-7bc585b64   3         3         3       16s
 ```
