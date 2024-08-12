@@ -1,23 +1,8 @@
 import Handlebars from "handlebars";
 import { promises as fs } from 'node:fs';
 import { buildParameters, parseCalmDoc } from "./parse-calm.js";
+import path from "node:path";
 
-async function loadTemplate(filename: string) {
-    const templateFile = await fs.readFile(filename, { encoding: 'utf-8' })
-    return Handlebars.compile(templateFile);
-}
-
-async function getNamespaceTemplate() {
-    return await loadTemplate("src/templates/namespace.yaml");
-}
-
-async function getServiceTemplate() {
-    return await loadTemplate("src/templates/service.yaml");
-}
-
-async function getDeploymentTemplate() {
-    return await loadTemplate("src/templates/deployment.yaml");
-}
 
 async function loadCalm(filename: string, debug: boolean) {
     if (debug)
@@ -31,12 +16,22 @@ function zipYamlDocs(docs: string[]): string {
     return "---\n" + docs.join("\n---\n");
 }
 
+async function loadTemplatesInDirectory(directory: string): Promise<{ [filename: string]: HandlebarsTemplateDelegate<any> }> {
+    const files = await fs.readdir(directory);
+    const loadedFiles: { [filename: string]: HandlebarsTemplateDelegate<any> } = {};
+
+    for (const file of files) {
+        const filePath = path.join(directory, file);
+        const fileContent = await fs.readFile(filePath, { encoding: 'utf-8' });
+        loadedFiles[file] = Handlebars.compile(fileContent);
+    }
+
+    return loadedFiles;
+}
+
 export default async function(filename: string, debug: boolean) {
     if (debug)
         console.log("generating from " + filename);
-    const namespaceTemplate = await getNamespaceTemplate();
-    const serviceTemplate = await getServiceTemplate();
-    const deploymentTemplate = await getDeploymentTemplate();
 
     const calm = await loadCalm(filename, debug);
     if (debug) {
@@ -47,11 +42,17 @@ export default async function(filename: string, debug: boolean) {
 
     const parameters = buildParameters(calmProperties);
 
-    const namespace = namespaceTemplate(parameters);
-    const service = serviceTemplate(parameters);
-    const deployment = deploymentTemplate(parameters);
+    const templates = await loadTemplatesInDirectory('src/templates');
 
-    const outputValues = [namespace, service, deployment];
+    if (debug) console.log(templates);
+
+    const outputValues = [];
+
+    for (const templateName in templates) {
+        const template = templates[templateName];
+        outputValues.push(template(parameters));
+    }
+
     const output = zipYamlDocs(outputValues);
 
     return output;
