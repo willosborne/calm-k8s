@@ -1,0 +1,16 @@
+
+common:
+    appName: $.['unique-id']
+templates:
+    deployment.yaml: 
+        # approach 1: if there's no image property, skip this template
+        # approach 2:
+        condition:
+            path: $.name
+            value: "Load Balancer"
+        image: $.interfaces[0].image
+        port: $.interfaces[1].port
+    service.yaml:
+        port: $.interfaces[1].port
+        targetPort: $.interfaces[1].port
+pathScheme: relative

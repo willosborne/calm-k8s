@@ -1,0 +1,39 @@
+# templates at top level; better for duplication but makes it less calm-driven
+pattern: "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/pattern/secure-service-pattern.json"
+templates:
+    application-deployment.yaml: 
+      nodes: 
+        - "application"
+      properties:
+        image: $.interfaces[0].image # jsonpaths would probably use the name rather than the number
+        port: $.interfaces[1].port
+    database-deployment.yaml: 
+      nodes: 
+        - "database"
+      properties:
+        image: $.interfaces[0].image
+        port: $.interfaces[1].port
+        persistence: $.persistence
+    service.yaml:
+      nodes: 
+        - "load-balancer"
+      properties:
+        port: $.interfaces[1].port
+        targetPort: $.interfaces[1].port
+    egress.yaml:
+      relationships: 
+        - application-database
+      properties:
+        from: $.relationship-type.connects.source.node
+        to: $.relationship-type.connects.destination.node
+    ingress.yaml:
+      relationships: 
+        - application-database
+      properties:
+        from: $.relationship-type.connects.destination.node
+        to: $.relationship-type.connects.source.node
+    ingress-external.yaml:
+      relationships:
+        - "consumer-load-balancer"
+      properties:
+        to: $.relationship-type.connects.source.node
