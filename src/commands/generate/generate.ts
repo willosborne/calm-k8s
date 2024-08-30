@@ -1,9 +1,7 @@
 import Handlebars from "handlebars";
 import { promises as fs } from 'node:fs';
-import { buildParameters, getCalmNodeById, parseTemplatePropertiesFromCalmObject } from "./parse-calm.js";
-import path from "node:path";
+import { getCalmNodeById, parseTemplatePropertiesFromCalmObject } from "./parse-calm.js";
 import { ExtractedProperties, NodeConfig, parsePatternConfig, TemplateConfig } from "./model/pattern-config.js";
-
 
 async function loadCalm(filename: string, debug: boolean) {
     if (debug)
@@ -33,7 +31,6 @@ export default async function(calmFilename: string, patternConfigFilename: strin
     }
 
     const patternConfig = await parsePatternConfig(patternConfigFilename);
-
     const outputValues = []
 
     for (const nodeConfig of patternConfig.nodes) {
@@ -46,7 +43,6 @@ export default async function(calmFilename: string, patternConfigFilename: strin
 }
 
 async function generateNode(config: NodeConfig, calmDocument: object): Promise<string[]> {
-    console.log("generating node")
     const calmObject = getCalmNodeById(config['unique-id'], calmDocument);
     console.log("calm object parsed: " + JSON.stringify(calmObject))
     const output = [];
