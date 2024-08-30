@@ -1,0 +1,25 @@
+# better locality and typing
+# more duplication in the case that templates are re-used across nodes or relationships
+pattern: "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/pattern/secure-service-pattern.json"
+nodes:
+  - unique-id: "load-balancer"
+    templates:
+      - filename: src/templates/service.yaml
+        properties:
+          port: $.interfaces[0].port
+          targetPort: $.interfaces[0].port
+          appName: $.name
+  - unique-id: "application"
+    templates:
+      - filename: src/templates/application-deployment.yaml
+        properties:
+          image: $.interfaces[0].image # jsonpaths would probably use the name rather than the number
+          port: $.interfaces[1].port
+  - unique-id: "postgres-database"
+    templates:
+      - filename: src/templates/database-deployment.yaml
+        properties:
+          image: $.interfaces[0].image # jsonpaths would probably use the name rather than the number
+          port: $.interfaces[1].port
+          persistence: $.persistence
+          appName: $.name

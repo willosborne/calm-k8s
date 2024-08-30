@@ -8,9 +8,10 @@ program
 program.command('generate')
     .description('Generate a set of Kubernetes CRDs from a CALM architecture document')
     .argument('<document>', 'CALM document file path to generate from')
+    .argument('<config>', 'Pattern config file to use when generating')
     .option('-v, --verbose', 'Whether to do verbose level logging', false)
-    .action(async (arg, options) => {
-        const output = await generate(arg, options.verbose); 
+    .action(async (document, patternConfig, options) => {
+        const output = await generate(document, patternConfig, options.verbose); 
         console.log(output);
     });
 

@@ -5,7 +5,12 @@
       "node-type": "system",
       "name": "Load Balancer",
       "description": "Kubernetes provided load balancer provided at the edge of the cluster",
-      "interfaces": []
+      "interfaces": [
+        {
+          "unique-id": "http-port",
+          "port": 8080
+        }
+      ]
     },
     {
       "unique-id": "application",
@@ -28,7 +33,17 @@
       "node-type": "database",
       "name": "Postgres Database",
       "description": "Postgres Database configured on the postgres service, using defaults for ports",
-      "interfaces": []
+      "interfaces": [
+        {
+          "unique-id": "application-image",
+          "image": "masteringapi/attendees:v1.1"
+        },
+        {
+          "unique-id": "http-port",
+          "port": 8080
+        }
+      ],
+      "persistence": "yes"
     },
     {
       "unique-id": "service-mesh-k8s-cluster",

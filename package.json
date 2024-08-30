@@ -18,7 +18,8 @@
   "dependencies": {
     "commander": "^12.1.0",
     "handlebars": "^4.7.8",
-    "jsonpath": "^1.1.1"
+    "jsonpath": "^1.1.1",
+    "yaml": "^2.5.0"
   },
   "bin": {
     "calm-k8s": "./dist/index.js"
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@types/jsonpath": "^0.2.4",
     "@types/node": "^22.1.0",
+    "@types/yaml": "^1.9.7",
     "link": "^2.1.1",
     "typescript": "^5.5.4"
   }
