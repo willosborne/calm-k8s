@@ -3,6 +3,7 @@ import { parse } from "yaml";
 
 export interface PatternConfig {
     pattern: string;
+    globals: Globals;
     nodes: Array<NodeConfig>;
 }
 
@@ -15,7 +16,14 @@ export type RelationshipConfig = NodeConfig;
 
 export type PropertyJsonPaths = { [key: string]: string }
 
-export type ExtractedProperties = { [key: string]: string };
+export type ExtractedProperties = { [key: string]: string }
+
+export type ConstantProperties = { [key: string]: string }
+
+export interface Globals {
+    properties: PropertyJsonPaths;
+    constants: ConstantProperties;
+}
 
 export interface TemplateConfig {
     filename: string;

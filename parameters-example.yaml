@@ -1,6 +1,12 @@
 # better locality and typing
 # more duplication in the case that templates are re-used across nodes or relationships
 pattern: "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/pattern/secure-service-pattern.json"
+globals:
+  # TODO this is unintuitive. Is this a global property that determines its value once, or are we basically avoiding re-use by saying this property should be populated for each node?
+  # properties:
+  #   appName: $["unique-id"] 
+  constants:
+    appName: appNameHere
 nodes:
   - unique-id: "load-balancer"
     templates:
@@ -8,7 +14,7 @@ nodes:
         properties:
           port: $.interfaces[0].port
           targetPort: $.interfaces[0].port
-          appName: $.name
+          appName: $["unique-id"]
   - unique-id: "application"
     templates:
       - filename: src/templates/application-deployment.yaml
@@ -22,4 +28,4 @@ nodes:
           image: $.interfaces[0].image # jsonpaths would probably use the name rather than the number
           port: $.interfaces[1].port
           persistence: $.persistence
-          appName: $.name
+          appName: $["unique-id"]

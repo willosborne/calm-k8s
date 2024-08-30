@@ -1,5 +1,5 @@
 import jp from 'jsonpath';
-import { ExtractedProperties, PropertyJsonPaths } from './model/pattern-config.js';
+import { ConstantProperties, ExtractedProperties, PropertyJsonPaths } from './model/pattern-config.js';
 import { assertUnique } from './utils.js';
 import { join } from 'path';
 

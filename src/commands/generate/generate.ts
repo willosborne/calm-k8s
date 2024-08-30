@@ -1,7 +1,8 @@
 import Handlebars from "handlebars";
 import { promises as fs } from 'node:fs';
 import { getCalmNodeById, parseTemplatePropertiesFromCalmObject } from "./parse-calm.js";
-import { ExtractedProperties, NodeConfig, parsePatternConfig, TemplateConfig } from "./model/pattern-config.js";
+import { ConstantProperties, ExtractedProperties, NodeConfig, parsePatternConfig, TemplateConfig } from "./model/pattern-config.js";
+import { combinePropertes } from "./utils.js";
 
 async function loadCalm(filename: string, debug: boolean) {
     if (debug)
@@ -31,10 +32,18 @@ export default async function(calmFilename: string, patternConfigFilename: strin
     }
 
     const patternConfig = await parsePatternConfig(patternConfigFilename);
+    const globalProperties = !!patternConfig?.globals?.properties 
+        ? parseTemplatePropertiesFromCalmObject(patternConfig.globals.properties, calm) 
+        : {};
+
+    const constants = !!patternConfig?.globals?.constants 
+        ? patternConfig.globals.constants
+        : {};
+
     const outputValues = []
 
     for (const nodeConfig of patternConfig.nodes) {
-        outputValues.push(...await generateNode(nodeConfig, calm));
+        outputValues.push(...await generateNode(nodeConfig, globalProperties, constants, calm));
     }
 
     const output = zipYamlDocs(outputValues);
@@ -42,7 +51,7 @@ export default async function(calmFilename: string, patternConfigFilename: strin
     return output;
 }
 
-async function generateNode(config: NodeConfig, calmDocument: object): Promise<string[]> {
+async function generateNode(config: NodeConfig, globalProperties: ExtractedProperties, constants: ConstantProperties, calmDocument: object): Promise<string[]> {
     const calmObject = getCalmNodeById(config['unique-id'], calmDocument);
     console.log("calm object parsed: " + JSON.stringify(calmObject))
     const output = [];
@@ -52,7 +61,9 @@ async function generateNode(config: NodeConfig, calmDocument: object): Promise<s
         const properties: ExtractedProperties = parseTemplatePropertiesFromCalmObject(
             templateConfig.properties, calmObject
         );
-        output.push(template(properties));
+
+        const merged = combinePropertes(properties, globalProperties, constants)
+        output.push(template(merged));
     }
 
     return output;
