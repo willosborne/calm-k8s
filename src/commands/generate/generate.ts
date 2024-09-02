@@ -12,10 +12,6 @@ async function loadCalm(filename: string, debug: boolean) {
     return JSON.parse(data);
 }
 
-function zipYamlDocs(docs: string[]): string {
-    return "---\n" + docs.join("\n---\n");
-}
-
 async function loadTemplatesInDirectory(directory: string): Promise<{ [filename: string]: HandlebarsTemplateDelegate<any> }> {
     const files = await fs.readdir(directory);
     const loadedFiles: { [filename: string]: HandlebarsTemplateDelegate<any> } = {};
@@ -37,7 +33,7 @@ function initHandlebars() {
     })
 }
 
-export default async function(filename: string, debug: boolean) {
+export default async function(filename: string, debug: boolean): Promise<Map<string, string>> {
     if (debug)
         console.log("generating from " + filename);
 
@@ -56,14 +52,12 @@ export default async function(filename: string, debug: boolean) {
 
     if (debug) console.log(templates);
 
-    const outputValues = [];
+    const outputValues = new Map<string, string>();
 
     for (const templateName in templates) {
         const template = templates[templateName];
-        outputValues.push(template(parameters));
+        outputValues.set(templateName, template(parameters));
     }
 
-    const output = zipYamlDocs(outputValues);
-
-    return output;
+    return outputValues;
 }
