@@ -31,7 +31,7 @@
       "interfaces": [
         {
           "unique-id": "database-image",
-          "image": "postgres/postgres:latest"
+          "image": "postgres/postgres:16.4"
         },
         {
           "unique-id": "database-port",
