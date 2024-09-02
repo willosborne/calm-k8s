@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
-KUBERNETES_VERSION={{ kubernetes_version }}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-minikube start --network-plugin=cni --cni=calico --memory=8192 --cpus=4 --kubernetes-version=$KUBERNETES_VERSION
+KUBERNETES_VERSION=1.30.0
+
+minikube start --network-plugin=cni --cni=calico --kubernetes-version=$KUBERNETES_VERSION
+
+kubectl apply --namespace calico-system --filename "${SCRIPT_DIR}/calico-global-deny.yaml"
