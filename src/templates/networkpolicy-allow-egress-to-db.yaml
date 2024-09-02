@@ -5,11 +5,11 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-    app: { { appName } }
+    app: {{ appName }}
   egress:
     - to:
         - podSelector:
             matchLabels:
-              db: { { databaseName } }
+              db: {{ databaseName }}
   policyTypes:
     - Egress

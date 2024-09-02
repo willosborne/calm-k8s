@@ -1,7 +1,11 @@
 export interface Parameters {
     image: string,
     port: number,
-    targetPort: number,
+    applicationPort: number,
     serviceName: string,
-    appName: string
+    appName: string,
+    namespaceName: string,
+    databaseName: string,
+    databasePort: string,
+    databaseImage: string
 }

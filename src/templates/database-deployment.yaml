@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ databaseName }}
+  namespace: {{ namespaceName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ databaseName }}
+  template:
+    metadata:
+      labels:
+        app: {{ databaseName }}
+    spec:
+      containers:
+        - name: app
+          image: {{ databaseImage }}
+          ports:
+            - containerPort: {{ databasePort }}
