@@ -35,15 +35,19 @@ Then it will be available everywhere as `calm-k8s`.
 
 ## Example usage with Kubernetes
 
-### Minikube setup
+### Minikube setup - Manually
 
 Follow the steps for your platform here: <https://minikube.sigs.k8s.io/docs/start/>
 
 Then start your cluster with the [Calico CNI](https://www.tigera.io/project-calico/) enabled.
 
 ```sh
-minikube start --network-plugin=cni --cni=calico
+minikube start --network-plugin=cni --cni=calico --kubernetes-version=1.30.0
 ```
+
+### Minikube setup - CALM + CLI
+
+TBC
 
 ### Generate & apply the resources
 
