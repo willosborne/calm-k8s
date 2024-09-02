@@ -28,7 +28,16 @@
       "node-type": "database",
       "name": "Postgres Database",
       "description": "Postgres Database configured on the postgres service, using defaults for ports",
-      "interfaces": []
+      "interfaces": [
+        {
+          "unique-id": "database-image",
+          "image": "postgres/postgres:latest"
+        },
+        {
+          "unique-id": "database-port",
+          "port": 1234
+        }
+      ]
     },
     {
       "unique-id": "service-mesh-k8s-cluster",

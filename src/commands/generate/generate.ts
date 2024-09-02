@@ -29,9 +29,19 @@ async function loadTemplatesInDirectory(directory: string): Promise<{ [filename:
     return loadedFiles;
 }
 
+function initHandlebars() {
+    Handlebars.registerHelper('helperMissing', (...args) => {
+        var options = args[args.length-1];
+        var sliced = Array.prototype.slice.call(args, 0,args.length-1)
+        throw new Error("Missing element " + options.name)
+    })
+}
+
 export default async function(filename: string, debug: boolean) {
     if (debug)
         console.log("generating from " + filename);
+
+    initHandlebars();
 
     const calm = await loadCalm(filename, debug);
     if (debug) {
