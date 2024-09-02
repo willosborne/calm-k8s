@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-from-app-to-db
+  name: allow-ingress-to-db-from-app
 spec:
   podSelector:
     matchLabels:
-    app: {{ appName }}
-  egress:
-    - to:
+      db: {{ databaseName }}
+  ingress:
+    - from:
         - podSelector:
             matchLabels:
-              db: {{ databaseName }}
+              app: {{ appName }}
   policyTypes:
-    - Egress
+    - Ingress
