@@ -83,3 +83,10 @@ deployment.apps/application   3/3     3            3           16s
 NAME                                    DESIRED   CURRENT   READY   AGE
 replicaset.apps/application-7bc585b64   3         3         3       16s
 ```
+
+### Access the service
+
+The deployed application can be accessed via the load balancer using `minikube tunnel`.
+Details of how to use this: <https://minikube.sigs.k8s.io/docs/handbook/accessing/#loadbalancer-access>
+
+Once the tunnel is active, the Swagger UI for the API of the application can be accessed locally at <http://127.0.0.1:8080/swagger-ui/index.html>.
