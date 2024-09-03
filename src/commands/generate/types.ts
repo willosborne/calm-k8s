@@ -7,5 +7,6 @@ export interface Parameters {
     namespaceName: string,
     databaseName: string,
     databasePort: string,
-    databaseImage: string
+    databaseImage: string,
+    kubernetesVersion: string
 }

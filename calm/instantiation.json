@@ -44,7 +44,12 @@
       "node-type": "system",
       "name": "Service Mesh Enabled Kubernetes Cluster",
       "description": "Service Mesh Deployed on a Kubernetes Cluster with network policy rules enabled",
-      "interfaces": []
+      "interfaces": [
+        {
+          "unique-id": "kubernetes-version",
+          "kubernetes-version": "1.30.0"
+        }
+      ]
     }
   ],
   "relationships": [

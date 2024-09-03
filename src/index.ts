@@ -5,16 +5,16 @@ import * as fs from 'node:fs/promises'
 import * as path from 'node:path';
 
 program
-    .version('0.0.1');
+    .version('0.1.0');
 
 program.command('generate')
     .description('Generate a set of Kubernetes CRDs from a CALM architecture document')
     .argument('<document>', 'CALM document file path to generate from')
-    // .requiredOption('-t/--templates', 'Directory of templates to populate')
+    .requiredOption('-t, --templates <DIRECTORY>', 'Directory of Handlebars templates to populate')
     .option('-o, --output <DIRECTORY>', 'Directory to output files to. If not set, output to STDOUT separated by --')
     .option('-v, --verbose', 'Whether to do verbose level logging', false)
     .action(async (arg, options) => {
-        const outputMap = await generate(arg, options.verbose); 
+        const outputMap = await generate(arg, options.templates, options.verbose); 
 
         if (!options.output) {
             const outputString = zipYamlDocs(Array.from(outputMap.values()));
