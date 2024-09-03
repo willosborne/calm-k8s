@@ -9,6 +9,7 @@ const jsonPaths = new Map<string, string>([
     ['databaseName', `$.nodes[2]['unique-id']`],
     ['databaseImage', '$.nodes[2].interfaces[0].image'],
     ['databasePort', '$.nodes[2].interfaces[1].port'],
+    ['kubernetesVersion', `$.nodes[3].interfaces[0]['kubernetes-version']`]
 ])
 
 function extractPropertiesByJsonPath(calmDocument: object, jsonPaths: Map<string, string>): Map<string, string> {
@@ -51,5 +52,6 @@ export function buildParameters(props: Map<string, string>): Parameters {
         databaseImage: getProp(props, 'databaseImage'),
         databaseName: getProp(props, 'databaseName'),
         databasePort: getProp(props, 'databasePort'),
+        kubernetesVersion: getProp(props, 'kubernetesVersion')
     }
 }

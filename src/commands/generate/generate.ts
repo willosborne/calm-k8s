@@ -33,7 +33,7 @@ function initHandlebars() {
     })
 }
 
-export default async function(filename: string, debug: boolean): Promise<Map<string, string>> {
+export default async function(filename: string, templatesPath: string, debug: boolean): Promise<Map<string, string>> {
     if (debug)
         console.log("generating from " + filename);
 
@@ -48,7 +48,7 @@ export default async function(filename: string, debug: boolean): Promise<Map<str
 
     const parameters = buildParameters(calmProperties);
 
-    const templates = await loadTemplatesInDirectory('src/templates');
+    const templates = await loadTemplatesInDirectory(templatesPath);
 
     if (debug) console.log(templates);
 
