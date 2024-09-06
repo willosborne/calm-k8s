@@ -15,7 +15,7 @@
       "interfaces": [
         {
           "unique-id": "application-image",
-          "image": "masteringapi/attendees:v1.1"
+          "image": "masteringapi/attendees-quarkus:ws-native-db"
         },
         {
           "unique-id": "http-port",
@@ -35,7 +35,7 @@
         },
         {
           "unique-id": "database-port",
-          "port": 1234
+          "port": 5432
         }
       ]
     },
