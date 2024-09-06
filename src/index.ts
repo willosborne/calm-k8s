@@ -26,10 +26,14 @@ program.command('generate')
     });
 
 async function writeFiles(outputDirectory: string, outputFiles: Map<string, string>) {
-    console.log("writing to " + outputDirectory)
+    console.log(`Writing files to directory '${outputDirectory}'`)
     await fs.mkdir(outputDirectory);
     for (const [template, output] of outputFiles) {
-        await fs.writeFile(path.join(outputDirectory, template), output, { encoding: 'utf-8' });
+        const outputPath = path.join(outputDirectory, template)
+        await fs.writeFile(outputPath, output, { encoding: 'utf-8' });
+        if (template.endsWith('.sh')) {
+            await fs.chmod(outputPath, '755')
+        }
     }
 }
 
