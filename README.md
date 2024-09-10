@@ -3,6 +3,12 @@
 ## Prerequisites
 
 - Node 20+
+- Docker desktop
+
+### A note about Docker Desktop on Mac
+Version 4.34.0 of Docker Desktop has as a bug on Mac OS X that breaks Minikube. 
+You should downgrade to the previous version. 
+See https://github.com/docker/cli/issues/5412 for more information.
 
 ## Installation
 
@@ -39,6 +45,8 @@ Then it will be available everywhere as `calm-k8s`.
 
 Follow the steps for your platform here: <https://minikube.sigs.k8s.io/docs/start/>
 
+You may also need to install `kubectl` on some Linux platforms.
+
 Then start your cluster with the [Calico CNI](https://www.tigera.io/project-calico/) enabled.
 
 ```sh
@@ -47,7 +55,8 @@ minikube start --network-plugin=cni --cni=calico --kubernetes-version=1.30.0
 
 ### Minikube setup - CALM + CLI
 
-First run the CALM K8s CLI against the minikube templates:
+First run the CALM K8s CLI against the minikube templates.
+From the root of the project (same level as this `README`):
 
 ```shell
 mkdir output
@@ -55,7 +64,7 @@ npx calm-k8s generate --templates templates/k8s-cluster-minikube --output output
 ```
 
 This will generate a script to set up the minikube cluster. 
-Run this script:
+Then run this script, again from the project root:
 
 ```shell
 ./output/minikube/initialise-cluster.sh
@@ -65,6 +74,8 @@ Run this script:
 
 The `templates/k8s-application` directory contains templates to generate a set of Kubernetes resources for the application from the CALM instantiation.
 It also generates a `kustomize` script that makes applying the documents to your cluster easy.
+
+From the project root, run the CLI against the `k8s-application` templates and output to the `output/k8s-application` directory:
 
 ```sh
 npx calm-k8s generate --templates templates/k8s-application --output output/k8s-application calm/instantiation.json
@@ -77,7 +88,8 @@ kubectl kustomize output/k8s-application
 ```
 
 To apply the Kustomization:
-Note: `-k` instead of `-f` - this is to apply a Kustomization
+Note: `-k` instead of `-f` - this is to apply a Kustomization. 
+Provide the *directory* when running with the `-k` argument.
 
 ```sh
 kubectl apply -k output/k8s-application
@@ -125,4 +137,4 @@ replicaset.apps/application-7bc585b64   3         3         3       16s
 The deployed application can be accessed via the load balancer using `minikube tunnel`.
 Details of how to use this: <https://minikube.sigs.k8s.io/docs/handbook/accessing/#loadbalancer-access>
 
-Once the tunnel is active, the Swagger UI for the API of the application can be accessed locally at <http://127.0.0.1:8080/swagger-ui/index.html>.
+Once the tunnel is active, the Swagger UI for the API of the application can be accessed locally at <http://127.0.0.1:8080/q/swagger-ui/index.html>.
