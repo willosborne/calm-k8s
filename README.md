@@ -47,21 +47,53 @@ minikube start --network-plugin=cni --cni=calico --kubernetes-version=1.30.0
 
 ### Minikube setup - CALM + CLI
 
-TBC
+First run the CALM K8s CLI against the minikube templates:
+
+```shell
+mkdir output
+npx calm-k8s generate --templates templates/k8s-cluster-minikube --output output/minikube calm/instantiation.json
+```
+
+This will generate a script to set up the minikube cluster. 
+Run this script:
+
+```shell
+./output/minikube/initialise-cluster.sh
+```
 
 ### Generate & apply the resources
 
-The `stdout` stream from the generate command can be piped directly into `kubectl`:
+The `templates/k8s-application` directory contains templates to generate a set of Kubernetes resources for the application from the CALM instantiation.
+It also generates a `kustomize` script that makes applying the documents to your cluster easy.
 
 ```sh
-npx calm-k8s generate calm/instantiation.json | kubectl apply -f -
+npx calm-k8s generate --templates templates/k8s-application --output output/k8s-application calm/instantiation.json
+```
+
+You can now inspect the Kustomization with `kubectl`:
+
+```sh
+kubectl kustomize output/k8s-application
+```
+
+To apply the Kustomization:
+Note: `-k` instead of `-f` - this is to apply a Kustomization
+
+```sh
+kubectl apply -k output/k8s-application
 ```
 
 Example output:
 
 ```sh
+namespace/application created
 service/application-svc created
+service/db created
 deployment.apps/application created
+deployment.apps/postgres-database created
+networkpolicy.networking.k8s.io/allow-egress-from-app-to-db created
+networkpolicy.networking.k8s.io/allow-external-ingress-to-app created
+networkpolicy.networking.k8s.io/allow-ingress-to-db-from-app created
 ```
 
 You can verify the resources created with:
