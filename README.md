@@ -6,8 +6,9 @@
 - Docker desktop
 
 ### A note about Docker Desktop on Mac
-Version 4.34.0 of Docker Desktop has as a bug on Mac OS X that breaks Minikube. 
-You should downgrade to the previous version. 
+
+Version 4.34.0 of Docker Desktop has as a bug on Mac OS X that breaks Minikube.
+You should downgrade to the previous version.
 See https://github.com/docker/cli/issues/5412 for more information.
 
 ## Installation
@@ -63,7 +64,7 @@ mkdir output
 npx calm-k8s generate --templates templates/k8s-cluster-minikube --output output/minikube calm/instantiation.json
 ```
 
-This will generate a script to set up the minikube cluster. 
+This will generate a script to set up the minikube cluster.
 Then run this script, again from the project root:
 
 ```shell
@@ -88,11 +89,11 @@ kubectl kustomize output/k8s-application
 ```
 
 To apply the Kustomization:
-Note: `-k` instead of `-f` - this is to apply a Kustomization. 
-Provide the *directory* when running with the `-k` argument.
+Note: `--kustomize` or `'k` instead of `-f` - this is to apply a Kustomization.
+Provide the _directory_ when running with the `-k` argument.
 
 ```sh
-kubectl apply -k output/k8s-application
+kubectl apply --kustomize output/k8s-application
 ```
 
 Example output:
