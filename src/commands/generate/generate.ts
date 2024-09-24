@@ -28,7 +28,7 @@ async function loadTemplatesInDirectory(directory: string): Promise<{ [filename:
 function initHandlebars() {
     Handlebars.registerHelper('helperMissing', (...args) => {
         var options = args[args.length-1];
-        var sliced = Array.prototype.slice.call(args, 0,args.length-1)
+        var sliced = Array.prototype.slice.call(args, 0, args.length-1)
         throw new Error("Missing element " + options.name)
     })
 }

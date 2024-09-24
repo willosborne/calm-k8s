@@ -10,6 +10,6 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: {{ appName }}
+              app: {{ applicationName }}
   policyTypes:
     - Ingress

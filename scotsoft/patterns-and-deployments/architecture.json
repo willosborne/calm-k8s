@@ -62,8 +62,8 @@
           "description": "The cluster conforms to micro-segmentation control requirements",
           "requirements": [
             {
-              "control-requirement-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/schema/micro-segmentation.json",
-              "control-config-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/cluster-micro-segmentation.json"
+              "control-requirement-url": "https://short-url/security/schema/micro-segmentation.json",
+              "control-config-url": "https://short-url/security/cluster-micro-segmentation.json"
             }
           ]
         }
@@ -88,8 +88,8 @@
           "description": "The ingress to the cluster should be permitted in a secure environment using HTTPS",
           "requirements": [
             {
-              "control-requirement-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/schema/permitted-connection.json",
-              "control-config-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/cluster-ingress-https.json"
+              "control-requirement-url": "https://short-url/security/schema/permitted-connection.json",
+              "control-config-url": "https://short-url/security/cluster-ingress-https.json"
             }
           ]
         }
@@ -112,8 +112,8 @@
           "description": "Internal cluster connectivity should be permitted using mTLS",
           "requirements": [
             {
-              "control-requirement-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/schema/permitted-connection.json",
-              "control-config-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/cluster-internal-mtls.json"
+              "control-requirement-url": "hhttps://short-url/security/schema/permitted-connection.json",
+              "control-config-url": "https://short-url/security/cluster-internal-mtls.json"
             }
           ]
         }
@@ -136,8 +136,8 @@
           "description": "Internal cluster connectivity should be permitted using mTLS",
           "requirements": [
             {
-              "control-requirement-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/schema/permitted-connection.json",
-              "control-config-url": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/security/cluster-internal-mtls.json"
+              "control-requirement-url": "https://short-url/security/schema/permitted-connection.json",
+              "control-config-url": "https://short-url/security/cluster-internal-mtls.json"
             }
           ]
         }
@@ -154,5 +154,5 @@
     }
   ],
   "metadata": [],
-  "$schema": "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/pattern/secure-service-pattern.json"
+  "$schema": "https://short-url/pattern/secure-service-pattern.json"
 }

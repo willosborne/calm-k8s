@@ -70,7 +70,7 @@ cd ${SCRIPT_DIR}
 
 set -euo pipefail
 
-heading "ScotSoft 2024 - Patterns & Deployment"
+heading "ScotSoft 2024 - Deploying Architecture as Code"
 
 kitty icat ${SCRIPT_DIR}/demo.png
 
@@ -89,59 +89,42 @@ command "kubectl get namespaces"
 kubectl get namespaces
 read
 
-info " ...and Calico CNI plugin..."
-command "kubectl get pods --namespace kube-system --selector k8s-app=calico-node"
-kubectl get pods --namespace kube-system --selector k8s-app=calico-node
-read
+heading "Kubernetes Resource Generator - a proof-of-concept CLI tool"
 
-# info " ...with a global Calico default-deny network policy"
-# command "kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system "
-# read
-# kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system  | bat --language yaml --file-name GlobalNetworkPolicy
-# read
-
-heading "CALM -> Kubernetes Resource Generator: https://github.com/willosborne/calm-k8s"
-
-info "NodeJS based CLI tool..."
-command "calm-k8s help"
-calm-k8s help
-read
-
-info "Example - generate deployable Kubernetes resources from a CALM pattern instantiation..."
-command "calm-k8s generate calm/instantiation.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
+info "Example - generate deployable Kubernetes resources from an architecture pattern..."
+command "calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
 read
 
 clear
-info "Kubernetes resource templates..."
+bat architecture.json
+
+clear
 bat templates/k8s-application/*
 
 clear
-info "CALM pattern instantiation..."
-bat calm/pattern-instantiation.json
-
-clear
-info "Generating the Kubernetes resources..."
-command "calm-k8s generate calm/pattern-instantiation.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
+info "Generate Kubernetes resources from the architecture as code..."
+command "calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
+calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}
+echo
+command "tree ${GENERATED_DIR}"
+tree ${GENERATED_DIR}
 read
-calm-k8s generate calm/pattern-instantiation.json --templates templates/k8s-application/ --output ${GENERATED_DIR}
-bat ${GENERATED_DIR}/*
-
-heading "Deploying the generated Kubernetes resources"
 
 info "Kustomized resources..."
 command "kubectl kustomize ${GENERATED_DIR}"
 read
-
 kubectl kustomize ${GENERATED_DIR} | bat --language yaml --file-name "Kustomize Deployment"
 
-info "Applying the deployment..."
+heading "Deploying the generated Kubernetes resources"
+
+info "Applying the kustomizations..."
 command "kubectl apply --kustomize ${GENERATED_DIR}"
 kubectl apply --kustomize ${GENERATED_DIR}
 read
 
-info "Deployed resources..."
-command "kubectl get svc,deployment,networkpolicy --namespace application "
-kubectl get svc,deployment,networkpolicy --namespace application
+info "Applied resources..."
+command "kubectl get deployment,svc --namespace application "
+kubectl get deployment,svc --namespace application
 read
 
 heading "Verify the running application"
@@ -149,20 +132,42 @@ heading "Verify the running application"
 info "Access the application... http://127.0.0.1:8080/q/swagger-ui/"
 read
 
-heading "Verifying micro-segmentation"
+clear
+heading "Back to the slides..."
+read
 
-info "Default-deny NetworkPolicy resource"
-command "kubectl describe networkpolicy default-deny-all --namespace application"
-kubectl describe networkpolicy default-deny-all --namespace application  | bat --language yaml --style=numbers,grid
+heading "ScotSoft 2024 - Patterns & Controls"
+read
+
+info "Network micro-segmentation controls for the cluster..."
+bat architecture.json --line-range 49:70
 read
 
 clear
-info "Allow DNS NetworkPolicy resource"
-command "kubectl describe networkpolicy allow-dns --namespace application"
-kubectl describe networkpolicy allow-dns --namespace application  | bat --language yaml --style=numbers,grid
+info "...and for the application..."
+bat architecture.json --line-range 122:145
 read
 
-info "Application-to-database NetworkPolicy resources"
+heading "Applying micro-segmentation controls on Kubernetes"
+
+info "Network connectivity is managed using the Calico CNI plugin..."
+command "kubectl get pods --namespace kube-system --selector k8s-app=calico-node"
+kubectl get pods --namespace kube-system --selector k8s-app=calico-node
+read
+
+info " ...with a default-deny Calico GlobalNetworkPolicy"
+command "kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system"
+kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system  | bat --language yaml --file-name GlobalNetworkPolicy
+read
+
+clear
+info "Previously applied resources..."
+command "kubectl get deployment,service,networkpolicy --namespace application "
+kubectl get deployment,service,networkpolicy --namespace application
+read
+
+clear
+info "Application-to-database network policies..."
 command "kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application"
 kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application  | bat --language yaml --style=numbers,grid
 
@@ -171,22 +176,24 @@ kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace applicat
 read
 
 clear
-info "Discover the database IP..."
+heading "Verifying micro-segmentation"
+
+info "Find the database IP..."
 command "kubectl get pod --namespace application --selector db=postgres-database --output wide"
 kubectl get pod --namespace application --selector db=postgres-database --output wide
 echo
 
 echo
-info "\nExecute some connectivity tests from the application pod..."
+info "Verify the permitted connection between the application and database pods..."
 POD=$(kubectl get pods --namespace application -o=jsonpath='{.items[0].metadata.name}')
 command "kubectl debug --stdin --tty $POD --image=busybox:1.28 --namespace application --target=app"
 kubectl debug -it $POD --image=busybox:1.28 --namespace application --target=app
 
 clear
-info "Execute some connectivity tests from another pod..."
+info "Verify that connections from an unrelated are not permitted..."
 command "kubectl run --stdin --tty --rm --image=busybox:1.28 --namespace application test-pod"
 kubectl run --stdin --tty --rm --image=busybox:1.28 --namespace application test-pod
 
 clear
-success "Demo complete!"
+heading "Back to the slides..."
 read

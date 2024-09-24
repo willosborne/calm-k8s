@@ -9,7 +9,7 @@ program
 
 program.command('generate')
     .description('Generate a set of Kubernetes CRDs from a CALM architecture document')
-    .argument('<document>', 'CALM document file path to generate from')
+    .argument('<document>', 'File containing a CALM pattern instantiation to generate from')
     .requiredOption('-t, --templates <DIRECTORY>', 'Directory of Handlebars templates to populate')
     .option('-o, --output <DIRECTORY>', 'Directory to output files to. If not set, output to STDOUT separated by --')
     .option('-v, --verbose', 'Whether to do verbose level logging', false)
@@ -27,7 +27,7 @@ program.command('generate')
 
 async function writeFiles(outputDirectory: string, outputFiles: Map<string, string>) {
     console.log(`Writing files to directory '${outputDirectory}'`)
-    await fs.mkdir(outputDirectory);
+    await fs.mkdir(outputDirectory, { recursive: true });
     for (const [template, output] of outputFiles) {
         const outputPath = path.join(outputDirectory, template)
         await fs.writeFile(outputPath, output, { encoding: 'utf-8' });

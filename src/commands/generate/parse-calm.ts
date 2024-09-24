@@ -3,13 +3,13 @@ import { Parameters } from './types.js';
 import { Exception } from 'handlebars';
 
 const jsonPaths = new Map<string, string>([
-    ['appName', `$.nodes[1]['unique-id']`],
-    ['image', '$.nodes[1].interfaces[0].image'],
-    ['port', '$.nodes[1].interfaces[1].port'],
-    ['databaseName', `$.nodes[2]['unique-id']`],
-    ['databaseImage', '$.nodes[2].interfaces[0].image'],
-    ['databasePort', '$.nodes[2].interfaces[1].port'],
-    ['kubernetesVersion', `$.nodes[3].interfaces[0]['kubernetes-version']`]
+    ['applicationName', `$.nodes[2]['unique-id']`],
+    ['image', '$.nodes[2].interfaces[0].image'],
+    ['port', '$.nodes[2].interfaces[1].port'],
+    ['databaseName', `$.nodes[3]['unique-id']`],
+    ['databaseImage', '$.nodes[3].interfaces[0].image'],
+    ['databasePort', '$.nodes[3].interfaces[1].port'],
+    ['kubernetesVersion', `$.nodes[4].interfaces[0]['kubernetes-version']`]
 ])
 
 function extractPropertiesByJsonPath(calmDocument: object, jsonPaths: Map<string, string>): Map<string, string> {
@@ -18,7 +18,7 @@ function extractPropertiesByJsonPath(calmDocument: object, jsonPaths: Map<string
         const value: string = jp.value(calmDocument, path)
 
         if (!value) {
-            console.error("Coudn't find a key for the given json path in the CALM document. Key: ", key, ", JSONPath: ", path);
+            console.error("Couldn't find a key for the given json path in the CALM document. Key: ", key, ", JSONPath: ", path);
             throw Error("bad jsonpath")
         }
 
@@ -43,12 +43,12 @@ function getProp(props: Map<string, string>, prop: string): string {
 
 export function buildParameters(props: Map<string, string>): Parameters {
     return {
-        image: getProp(props, 'image'),
+        applicationImage: getProp(props, 'image'),
         port: Number.parseInt(getProp(props, 'port')),
         applicationPort: Number.parseInt(getProp(props, 'port')),
-        appName: getProp(props, 'appName'),
-        serviceName: getProp(props, 'appName')+ "-svc",
-        namespaceName: getProp(props, 'appName'),
+        applicationName: getProp(props, 'applicationName'),
+        serviceName: getProp(props, 'applicationName')+ "-svc",
+        namespaceName: getProp(props, 'applicationName'),
         databaseImage: getProp(props, 'databaseImage'),
         databaseName: getProp(props, 'databaseName'),
         databasePort: getProp(props, 'databasePort'),

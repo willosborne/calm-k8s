@@ -1,9 +1,9 @@
 export interface Parameters {
-    image: string,
+    applicationImage: string,
     port: number,
     applicationPort: number,
     serviceName: string,
-    appName: string,
+    applicationName: string,
     namespaceName: string,
     databaseName: string,
     databasePort: string,

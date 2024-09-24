@@ -4,7 +4,7 @@ metadata:
   name: {{ serviceName }}
 spec:
   selector:
-    app: {{ appName }}
+    app: {{ applicationName }}
   type: LoadBalancer
   ports:
     - name: http
