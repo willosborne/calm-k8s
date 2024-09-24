@@ -3,7 +3,7 @@
 export BAT_THEME="zenburn"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-GENERATED_DIR="generated/k8s-application"
+DEPLOY_DIR="deploy/k8s-application"
 
 # ANSI color codes
 YELLOW='\033[0;33m'
@@ -48,7 +48,7 @@ if [ -z "$minikube_running" ]; then
 fi
 
 info "Checking for previous deployment..."
-directory="${SCRIPT_DIR}/${GENERATED_DIR}/"
+directory="${SCRIPT_DIR}/${DEPLOY_DIR}/"
 if [ -d "${directory}" ]; then
     info "Deleting previous deployment..."
     command "kubectl delete --kustomize ${directory}"
@@ -93,8 +93,8 @@ read
 
 heading "Kubernetes Resource Generator - a proof-of-concept CLI tool"
 
-info "Example - generate deployable Kubernetes resources from an architecture pattern..."
-command "calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
+info "Create deployable Kubernetes resources from an architecture pattern..."
+command "calm-k8s template architecture.json --templates templates/k8s-application/ --output ${DEPLOY_DIR}"
 read
 
 clear
@@ -104,24 +104,24 @@ clear
 bat templates/k8s-application/*
 
 clear
-info "Generate Kubernetes resources from the architecture as code..."
-command "calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}"
-calm-k8s generate architecture.json --templates templates/k8s-application/ --output ${GENERATED_DIR}
+info "Template Kubernetes resources from the architecture as code..."
+command "calm-k8s template architecture.json --templates templates/k8s-application/ --output ${DEPLOY_DIR}"
+calm-k8s template architecture.json --templates templates/k8s-application/ --output ${DEPLOY_DIR}
 echo
-command "tree ${GENERATED_DIR}"
-tree ${GENERATED_DIR}
-read
+command "tree ${DEPLOY_DIR}"
+tree ${DEPLOY_DIR}
 
+echo
 info "Kustomized resources..."
-command "kubectl kustomize ${GENERATED_DIR}"
+command "kubectl kustomize ${DEPLOY_DIR}"
 read
-kubectl kustomize ${GENERATED_DIR} | bat --language yaml --file-name "Kustomize Deployment"
+kubectl kustomize ${DEPLOY_DIR} | bat --language yaml --file-name "Kustomize Deployment"
 
-heading "Deploying the generated Kubernetes resources"
+heading "Deploying the templated Kubernetes resources"
 
 info "Applying the kustomizations..."
-command "kubectl apply --kustomize ${GENERATED_DIR}"
-kubectl apply --kustomize ${GENERATED_DIR}
+command "kubectl apply --kustomize ${DEPLOY_DIR}"
+kubectl apply --kustomize ${DEPLOY_DIR}
 read
 
 info "Applied resources..."
