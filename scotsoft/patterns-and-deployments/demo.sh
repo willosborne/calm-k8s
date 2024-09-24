@@ -35,7 +35,7 @@ success() {
 
 command() {
     local text=$1
-    echo -e "> ${text}\n"
+    echo -e "\033[0;32m> ${text}\033[0m\n"
 }
 
 heading "Preparing the environment for the demo..."
@@ -147,40 +147,42 @@ kubectl get deployment,service,networkpolicy --namespace application
 read
 
 clear
-info "Network micro-segmentation controls for the cluster..."
-bat architecture.json --line-range 49:70
+heading "Network micro-segmentation architecture controls for the cluster..."
+bat architecture.json --line-range 1:2 --line-range 49:70 --line-range 157:
 read
 
-info "How do we apply this control?"
-
 clear
-info "Applying cluster micro-segmentation controls on Kubernetes"
+heading "Applying cluster level micro-segmentation controls on Kubernetes"
 
 info "Network connectivity is managed using the Calico CNI plugin..."
 command "kubectl get pods --namespace kube-system --selector k8s-app=calico-node"
 kubectl get pods --namespace kube-system --selector k8s-app=calico-node
 read
 
+clear
 info " ...with a default-deny Calico GlobalNetworkPolicy"
 command "kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system"
-kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system  | bat --language yaml --file-name "GlobalNetworkPolicy default-deny"
+kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system | \
+    bat --language yaml --file-name "GlobalNetworkPolicy default-deny" --line-range 1:6 --line-range 12:29 
 read
 
 clear
-info "Applying application micro-segmentation controls"
+heading "Applying application level micro-segmentation controls on Kubernetes"
 
 info "Network micro-segmentation controls for the application..."
-bat architecture.json --line-range 122:145
+bat architecture.json --line-range 1 --line-range 73 --line-range 122:145 --line-range 157:
 read
 
 clear
 info "Application-to-database network policies..."
 command "kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application"
-kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application  | bat --language yaml --style=numbers,grid
+kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application | \
+    bat --language yaml --style=numbers,grid
 read
 
 command "kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace application"
-kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace application | bat --language yaml --style=numbers,grid
+kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace application | \
+    bat --language yaml --style=numbers,grid
 read
 
 clear
@@ -198,7 +200,7 @@ command "kubectl debug --stdin --tty $POD --image=busybox:1.28 --namespace appli
 kubectl debug -it $POD --image=busybox:1.28 --namespace application --target=app
 
 clear
-info "Verify that connections from an unrelated are not permitted..."
+info "Verify that connections from an unrelated pod are not permitted..."
 command "kubectl run --stdin --tty --rm --image=busybox:1.28 --namespace application test-pod"
 kubectl run --stdin --tty --rm --image=busybox:1.28 --namespace application test-pod
 
