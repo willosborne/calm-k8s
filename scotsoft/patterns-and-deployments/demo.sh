@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export BAT_THEME="zenburn"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GENERATED_DIR="generated/k8s-application"
 
@@ -123,8 +125,8 @@ kubectl apply --kustomize ${GENERATED_DIR}
 read
 
 info "Applied resources..."
-command "kubectl get deployment,svc --namespace application "
-kubectl get deployment,svc --namespace application
+command "kubectl get deployment,service,networkpolicy --namespace application "
+kubectl get deployment,service,networkpolicy --namespace application
 read
 
 heading "Verify the running application"
@@ -139,16 +141,20 @@ read
 heading "ScotSoft 2024 - Patterns & Controls"
 read
 
+info "Previously applied resources..."
+command "kubectl get deployment,service,networkpolicy --namespace application "
+kubectl get deployment,service,networkpolicy --namespace application
+read
+
+clear
 info "Network micro-segmentation controls for the cluster..."
 bat architecture.json --line-range 49:70
 read
 
-clear
-info "...and for the application..."
-bat architecture.json --line-range 122:145
-read
+info "How do we apply this control?"
 
-heading "Applying micro-segmentation controls on Kubernetes"
+clear
+info "Applying cluster micro-segmentation controls on Kubernetes"
 
 info "Network connectivity is managed using the Calico CNI plugin..."
 command "kubectl get pods --namespace kube-system --selector k8s-app=calico-node"
@@ -157,19 +163,21 @@ read
 
 info " ...with a default-deny Calico GlobalNetworkPolicy"
 command "kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system"
-kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system  | bat --language yaml --file-name GlobalNetworkPolicy
+kubectl describe globalnetworkpolicy deny-app-policy --namespace kube-system  | bat --language yaml --file-name "GlobalNetworkPolicy default-deny"
 read
 
 clear
-info "Previously applied resources..."
-command "kubectl get deployment,service,networkpolicy --namespace application "
-kubectl get deployment,service,networkpolicy --namespace application
+info "Applying application micro-segmentation controls"
+
+info "Network micro-segmentation controls for the application..."
+bat architecture.json --line-range 122:145
 read
 
 clear
 info "Application-to-database network policies..."
 command "kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application"
 kubectl describe networkpolicy allow-egress-from-app-to-db --namespace application  | bat --language yaml --style=numbers,grid
+read
 
 command "kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace application"
 kubectl describe networkpolicy allow-ingress-to-db-from-app --namespace application | bat --language yaml --style=numbers,grid
