@@ -139,7 +139,6 @@ heading "Back to the slides..."
 read
 
 heading "ScotSoft 2024 - Patterns & Controls"
-read
 
 info "Previously applied resources..."
 command "kubectl get deployment,service,networkpolicy --namespace application "
@@ -168,8 +167,6 @@ read
 
 clear
 heading "Applying application level micro-segmentation controls on Kubernetes"
-
-info "Network micro-segmentation controls for the application..."
 bat architecture.json --line-range 1 --line-range 73 --line-range 122:145 --line-range 157:
 read
 
