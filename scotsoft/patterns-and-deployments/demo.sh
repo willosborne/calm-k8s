@@ -110,13 +110,13 @@ calm-k8s template architecture.json --templates templates/k8s-application/ --out
 echo
 command "tree ${DEPLOY_DIR}"
 tree ${DEPLOY_DIR}
-
 echo
-info "Kustomized resources..."
-command "kubectl kustomize ${DEPLOY_DIR}"
+bat ${DEPLOY_DIR}/kustomization.yaml
 read
-kubectl kustomize ${DEPLOY_DIR} | bat --language yaml --file-name "Kustomize Deployment"
 
+kubectl kustomize ${DEPLOY_DIR} | bat --language yaml --file-name "Kustomized Kubernetes resources"
+
+clear
 heading "Deploying the templated Kubernetes resources"
 
 info "Applying the kustomizations..."
