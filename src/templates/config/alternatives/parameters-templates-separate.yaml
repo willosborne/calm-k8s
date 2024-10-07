@@ -1,0 +1,47 @@
+# better reuse and separation of data from templates
+# worse locality
+pattern: "https://raw.githubusercontent.com/finos/architecture-as-code/main/calm/domains-example/pattern/secure-service-pattern.json"
+nodes:
+    - unique-id: "load-balancer"
+      templates:
+        - service.yaml
+    - unique-id: "application"
+      templates:
+        - application-deployment.yaml
+    - unique-id: "database"
+      templates:
+        - database-deployment.yaml
+relationships: 
+    - unique-id: 
+        - "application-database"
+      templates:
+        - ingress.yaml
+        - egress.yaml
+    - unique-id: "consumer-load-balancer" # this doesn't exist, but it's an example
+      templates: 
+        - ingress-external.yaml
+templates:
+    application-deployment.yaml: 
+      properties:
+        image: $.interfaces[0].image # jsonpaths would probably use the name rather than the number
+        port: $.interfaces[1].port
+    database-deployment.yaml: 
+      properties:
+        image: $.interfaces[0].image
+        port: $.interfaces[1].port
+        persistence: $.persistence
+    service.yaml:
+      properties:
+        port: $.interfaces[1].port
+        targetPort: $.interfaces[1].port
+    egress.yaml:
+      properties:
+        from: $.relationship-type.connects.source.node
+        to: $.relationship-type.connects.destination.node
+    ingress.yaml:
+      properties:
+        from: $.relationship-type.connects.destination.node
+        to: $.relationship-type.connects.source.node
+    ingress-external.yaml:
+      properties:
+        to: $.relationship-type.connects.source.node
