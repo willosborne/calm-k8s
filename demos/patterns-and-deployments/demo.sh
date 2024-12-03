@@ -72,7 +72,7 @@ cd ${SCRIPT_DIR}
 
 set -euo pipefail
 
-heading "ScotSoft 2024 - Deploying Architecture as Code"
+heading "Dev & Eng Forum - November 2024: Deploying Architecture as Code"
 
 kitty icat ${SCRIPT_DIR}/demo.png
 
